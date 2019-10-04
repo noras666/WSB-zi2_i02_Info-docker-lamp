@@ -29,13 +29,12 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    build:
+      context: ./config/phpmyadmin
     container_name: 'phpmyadmin'
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - '8443:8081'
-    volumes:
-      - /sessions
+      - '8081:80'
 
