@@ -3,21 +3,19 @@ version: "3"
 services:
   webserver:
     build:
-      context: config/web
-    container_name: 'server'
+      context: ./config/web
+    container_name: 'web-server'
     restart: 'always'
     ports:
       - "80:80"
       - "443:443"
-    links:
-      - mysql
     volumes:
       - ${DOCUMENT_ROOT-./html/www}:/var/www/html
       - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
       - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
       - ${LOG_DIR-./data/logs/apache2}:/var/log/apache2
   mysql:
-    build: config/mysql
+    build: ./config/mysql
     container_name: 'mysql'
     restart: 'always'
     ports:
@@ -28,22 +26,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: main
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: 'phpmyadmin'
-    links:
-      - mysql
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - '8080:80'
+      - '8443:8081'
     volumes:
       - /sessions
-#  redis:
-#    container_name: 'png-redis'
-#    image: redis:latest
-#    ports:
-#      - "6379:6379"
+
